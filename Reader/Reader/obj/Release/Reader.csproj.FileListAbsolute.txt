@@ -1,0 +1,16 @@
+C:\Users\Administratör.5CG62401YF\source\repos\Reader\Reader\bin\Release\Properties\Resources.resx
+C:\Users\Administratör.5CG62401YF\source\repos\Reader\Reader\bin\Release\Properties\Resources.Designer.cs
+C:\Users\Administratör.5CG62401YF\source\repos\Reader\Reader\bin\Release\Reader.exe.config
+C:\Users\Administratör.5CG62401YF\source\repos\Reader\Reader\bin\Release\Reader.exe
+C:\Users\Administratör.5CG62401YF\source\repos\Reader\Reader\bin\Release\Reader.pdb
+C:\Users\Administratör.5CG62401YF\source\repos\Reader\Reader\obj\Release\MainWindow.g.cs
+C:\Users\Administratör.5CG62401YF\source\repos\Reader\Reader\obj\Release\App.g.cs
+C:\Users\Administratör.5CG62401YF\source\repos\Reader\Reader\obj\Release\Reader_MarkupCompile.cache
+C:\Users\Administratör.5CG62401YF\source\repos\Reader\Reader\obj\Release\Reader_MarkupCompile.lref
+C:\Users\Administratör.5CG62401YF\source\repos\Reader\Reader\obj\Release\MainWindow.baml
+C:\Users\Administratör.5CG62401YF\source\repos\Reader\Reader\obj\Release\Reader.g.resources
+C:\Users\Administratör.5CG62401YF\source\repos\Reader\Reader\obj\Release\Reader.Properties.Resources.resources
+C:\Users\Administratör.5CG62401YF\source\repos\Reader\Reader\obj\Release\Reader.csproj.GenerateResource.cache
+C:\Users\Administratör.5CG62401YF\source\repos\Reader\Reader\obj\Release\Reader.csproj.CoreCompileInputs.cache
+C:\Users\Administratör.5CG62401YF\source\repos\Reader\Reader\obj\Release\Reader.exe
+C:\Users\Administratör.5CG62401YF\source\repos\Reader\Reader\obj\Release\Reader.pdb
