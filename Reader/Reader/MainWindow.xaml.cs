@@ -188,22 +188,6 @@ namespace Reader
             LoadMango(ParseMango("Test"));
         }
 
-        private void StackPanel_Initialized(object sender, EventArgs e)
-        {
-
-        }
-
-        private void LeftChapterList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
-        private void MangaList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             string[] chapterData = ((sender as Button).Parent as Grid).Tag.ToString().Split('Ö');
@@ -211,9 +195,14 @@ namespace Reader
             string chapterTitle = chapterData[1];
             Mango manga = GetMango(mangaTitle);
 
-            ReaderWindow reader = new ReaderWindow(manga);
+            ReaderWindow reader = new ReaderWindow(manga, chapterTitle);
             reader.Title = mangaTitle + " : " + chapterTitle;
             reader.Show();
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }

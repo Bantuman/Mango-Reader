@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Reader"
         mc:Ignorable="d"
-        Title="Mango" Height="480" Width="940" WindowStyle="SingleBorderWindow">
+        Title="Mango" Height="480" Width="940" WindowStyle="SingleBorderWindow" Closed="Window_Closed">
 
     <Grid Width="{Binding ActualWidth, 
               RelativeSource = {RelativeSource AncestorType = {x:Type Window}}}" 
@@ -34,7 +34,7 @@
                 <ColumnDefinition Width="495*"/>
             </Grid.ColumnDefinitions>
 
-            <ListView Grid.Column="0" BorderBrush="Silver" Name="MangaList" Margin="10,10,10,10" SelectionChanged="MangaList_SelectionChanged">
+            <ListView Grid.Column="0" BorderBrush="Silver" Name="MangaList" Margin="10,10,10,10">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListViewItem_PreviewMouseLeftButtonDown" />
@@ -67,7 +67,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Border Background="Silver" BorderBrush="GhostWhite" BorderThickness="1" CornerRadius="8,8,3,3" HorizontalAlignment="Stretch" Margin="0,10,0,0"/>
-                    <ListView BorderThickness="0" Grid.Column="0"  Name="ChapterList" SelectionChanged="MangaList_SelectionChanged" Background="#00E2D1D1" Margin="10,15,0,0" HorizontalAlignment="Stretch" >
+                    <ListView BorderThickness="0" Grid.Column="0"  Name="ChapterList" Background="#00E2D1D1" Margin="10,15,0,0" HorizontalAlignment="Stretch" >
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListViewItem_PreviewMouseLeftButtonDown" />

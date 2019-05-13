@@ -22,28 +22,32 @@ namespace Reader
     public partial class ReaderWindow : Window
     {
         private int currentPage;
-        private int amountOfPages = 999;
+        private int amountOfPages;
         private Mango currentManga;
         private string currentChapter;
 
-        public ReaderWindow(Mango manga)
+        public ReaderWindow(Mango manga, string someChapter)
         {
             InitializeComponent();
             PreviewKeyDown += Reader_KeyDown;
-            LoadManga(manga);
+            LoadManga(manga, someChapter);
             MovePage(1);
         }
 
-        private void LoadManga(Mango manga)
+        private void LoadManga(Mango someManga, string someChapter)
         {
-            currentPage = 1;
-            currentManga = manga;
-            currentChapter = manga.Chapters.First().Title;
-            amountOfPages = PdfDocument.Load(manga.Chapters.First().Path).PageCount;
+            currentPage = 0;
+            currentManga = someManga;
+            currentChapter = someChapter;
+            amountOfPages = PdfDocument.Load(someManga.GetChapter(someChapter).Path).PageCount;
         }
 
         private void Reader_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Key == Key.Escape)
+            {
+                Hide();
+            }
             if (e.Key == Key.Right)
             {
                 MovePage(1);
@@ -64,22 +68,24 @@ namespace Reader
                 {
                     currentChapter = nextChapter.Title;
                 }
-                currentPage = 1;
+                currentPage = 0;
             }
-            if (currentPage < 1)
+            if (currentPage < 0)
             {
                 ChapterItem previousChapter = currentManga.GetChapter(currentChapter).PreviousChapter;
                 if (previousChapter != null)
                 {
                     currentChapter = previousChapter.Title;
-                    currentPage = PdfDocument.Load(previousChapter.Path).PageCount;
+                    currentPage = PdfDocument.Load(previousChapter.Path).PageCount - 1;
                 }
                 else
                 {
-                    currentPage = 1;
+                    currentPage = 0;
                 }
             }
+
             Title = currentManga.Title + " : " + currentChapter;
+            MangaTitle.Text = "     " + Title;
             RenderPage(this, currentManga.GetChapter(currentChapter).Path, currentPage, new Size(1024, 1024));
         }
 
@@ -103,9 +109,17 @@ namespace Reader
                 bitmapImage.StreamSource = ms;
                 bitmapImage.EndInit();
 
+                Width = bitmapImage.Width;
+                Height = bitmapImage.Height;
+
                 amountOfPages = document.PageCount;
                 reader.MangaDisplay.Source = bitmapImage;
             }
+        }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
         }
     }
 }
