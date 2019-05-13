@@ -37,6 +37,19 @@ namespace Reader
         public float Rating { get; set; } // ( 0.0f - 1.0f )
         public int ChapterProgress { get; set; }
 
+        public ChapterItem GetChapter(string chapterName)
+        {
+            foreach(ChapterItem chapter in Chapters)
+            {
+                if (chapter.Title == chapterName)
+                {
+                    return chapter;
+                }
+            }
+            return null;
+        }
+
+
         public void LoadData()
         {
              // load progress from some file
@@ -72,6 +85,8 @@ namespace Reader
         public int Completion { get; set; }
         public string BindingData { get => Manga + "Ö" + Title; }
         public int MaxCompletion { get; set; }
+        public ChapterItem PreviousChapter { get; set; }
+        public ChapterItem NextChapter { get; set; }
     }
 
     public partial class MainWindow : Window
@@ -113,10 +128,21 @@ namespace Reader
             }
             chapterItems.Sort((firstObj, secondObj) =>
             {
-                return Int32.Parse(firstObj.Title).CompareTo(Int32.Parse(secondObj.Title));
+                return int.Parse(firstObj.Title).CompareTo(int.Parse(secondObj.Title));
             });
+            for (int i = 0; i < chapterItems.Count; ++i)
+            {
+                if (i + 1 < chapterItems.Count)
+                {
+                    chapterItems[i].NextChapter = chapterItems[i + 1];
+                }
+                if (i - 1 >= 0)
+                {
+                    chapterItems[i].PreviousChapter = chapterItems[i - 1];
+                }
+            }
             someMango.Chapters = chapterItems;
-            
+
             List<MangaItem> currentItems = (List<MangaItem>)MangaList.ItemsSource ?? new List<MangaItem>();
             MangaItem newListItem = new MangaItem() { Title = someMango.Title, Completion = 50 };
             currentItems.Add(newListItem);
@@ -177,16 +203,16 @@ namespace Reader
 
         }
 
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            ReaderWindow reader = new ReaderWindow();
             string[] chapterData = ((sender as Button).Parent as Grid).Tag.ToString().Split('Ö');
             string mangaTitle = chapterData[0];
             string chapterTitle = chapterData[1];
             Mango manga = GetMango(mangaTitle);
 
+            ReaderWindow reader = new ReaderWindow(manga);
             reader.Title = mangaTitle + " : " + chapterTitle;
-            reader.MangaDisplay.Source = new Uri(manga.Chapters.First().Path);
             reader.Show();
         }
     }

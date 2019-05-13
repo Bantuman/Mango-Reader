@@ -9,7 +9,6 @@
     <Grid Width="{Binding ActualWidth, 
               RelativeSource = {RelativeSource AncestorType = {x:Type Window}}}" Height="{Binding ActualHeight, 
               RelativeSource ={RelativeSource AncestorType = {x:Type Window}}}" VerticalAlignment="Top">
-        <WebBrowser Name="MangaDisplay" HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Width="Auto"/>
-
+        <Image Name ="MangaDisplay" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,-4,0" Stretch="Fill"/>
     </Grid>
 </Window>

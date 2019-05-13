@@ -8,6 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("manga/yotsubato&!/thumbnail.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pdfium.dll")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pdfium.dll")]
 
 
