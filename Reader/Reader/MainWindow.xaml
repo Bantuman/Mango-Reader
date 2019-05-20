@@ -19,10 +19,10 @@
 
         <ToolBar Height="28" VerticalAlignment="Top" Grid.ColumnSpan="2">
             <Menu>
-                <MenuItem Header="Mango">
-                    <MenuItem Header="Import Manga"/>
+                <MenuItem Header="Mango" >
+                    <MenuItem Header="Import Manga" Click="MenuItem_Click"/>
                     <MenuItem Header = "Themes">
-                        <MenuItem Header = "NIGGA"/>
+                        <MenuItem Header = "noided"/>
                     </MenuItem>
                 </MenuItem>
             </Menu>
