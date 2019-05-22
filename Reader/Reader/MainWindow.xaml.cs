@@ -92,7 +92,40 @@ namespace Reader
 
     public partial class MainWindow : Window
     {
+        private Mango currentSelectedMango;
         private List<Mango> allMyMangos;
+
+        private Mango ParseMango(string[] chapters, string name, string synposis)
+        {
+            string basePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            if (!Directory.Exists(basePath + "\\.Mango"))
+            {
+                Directory.CreateDirectory(basePath + "\\.Mango");
+            }
+            string mangoPath = basePath + "\\.Mango\\" + name;
+            if (!Directory.Exists(mangoPath))
+            {
+                Directory.CreateDirectory(mangoPath);
+            }
+           
+            System.Drawing.Image image = System.Drawing.Image.FromFile("C:/Users/Administratör.5CG62401YF/Documents/GitHub/Mango-Reader/Reader/Reader/res/missing.jpg"); //"pack://application:,,,/res/missing"
+            image.Save(mangoPath + "\\thumbnail.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+            StreamWriter writer = File.CreateText(mangoPath + "\\info.mango");
+            writer.WriteLine("n:" + name + "\ns:" + synposis);
+            writer.Close();
+            for(int i = 0; i < chapters.Length; ++i)
+            {
+                File.Copy(chapters[i], mangoPath + "\\" + (i + 1).ToString() + ".pdf", true);
+            }
+            
+            return new Mango()
+            {
+                Title = name,
+                Synopsis = synposis,
+                ChapterPath = mangoPath,
+                ThumbnailPath = mangoPath + "\\thumbnail.jpg"
+            };
+        }
 
         private Mango ParseMango(string name)
         {
@@ -149,6 +182,7 @@ namespace Reader
             currentItems.Add(newListItem);
             allMyMangos.Add(someMango);
             MangaList.ItemsSource = currentItems;
+            MangaList.Items.Refresh();
         }
 
         private Mango GetMango(string mangoTitle)
@@ -175,6 +209,7 @@ namespace Reader
                     MangoThumbnail.Source = new BitmapImage(new Uri(selectedMango.ThumbnailPath));
                     MangoThumbnail.UpdateLayout();
                     ChapterList.ItemsSource = selectedMango.Chapters;
+                    currentSelectedMango = selectedMango;
                     MangoSynopsisBorder.Margin = new Thickness(MangoThumbnail.ActualWidth + 11, 0, 0, 0);
                 }
             }
@@ -185,8 +220,18 @@ namespace Reader
             allMyMangos = new List<Mango>();
             InitializeComponent();
 
-            LoadMango(ParseMango("Yotsubato&!"));
-            LoadMango(ParseMango("Test"));
+            string basePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            if (!Directory.Exists(basePath + "\\.Mango"))
+            {
+                Directory.CreateDirectory(basePath + "\\.Mango");
+            }
+            basePath += "\\.Mango";
+            string[] allMyMangoPaths = Directory.GetDirectories(basePath);
+            foreach (string mangoPath in allMyMangoPaths)
+            {
+                string mangoName = mangoPath.Substring(basePath.Length + 1);
+                LoadMango(ParseMango(mangoName));
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -206,57 +251,50 @@ namespace Reader
             Environment.Exit(0);
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void ImportManga_Click(object sender, EventArgs e)
         {
-            var fileContent = string.Empty;
-            var filePath = string.Empty;
-
+            ImportWindow importWindow = (((sender as Button).Parent as Grid).Parent as ImportWindow);
+            string[] filePaths = new string[] { };
             using (System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog())
             {
                 openFileDialog.InitialDirectory = "C:\\";
-                openFileDialog.Filter = "EPUB Filer (*.epub)|*.epub|PDF Filer (*.pdf)|*.pdf";
-                openFileDialog.FilterIndex = 2;
+                openFileDialog.Multiselect = true;
+                openFileDialog.Filter = "PDF Filer (*.pdf)|*.pdf"; // EPUB Filer (*.epub)|*.epub|
+                openFileDialog.FilterIndex = 1;
                 openFileDialog.RestoreDirectory = true;
 
                 if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    filePath = openFileDialog.FileName;
-                    var fileStream = openFileDialog.OpenFile();
-                    using (StreamReader reader = new StreamReader(fileStream))
-                    {
-                        fileContent = reader.ReadToEnd();
-                    }
+                    LoadMango(ParseMango(openFileDialog.FileNames, importWindow.MangaTitle.Text, new TextRange(importWindow.MangaSynposis.Document.ContentStart, importWindow.MangaSynposis.Document.ContentEnd).Text));
+                    importWindow.Hide();
+                }
+            }
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ImportWindow window = new ImportWindow();
+            window.Show();
+            window.NextButton.Click += ImportManga_Click;
+        }
+
+        private void MangoThumbnail_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            using (System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "C:\\";
+                openFileDialog.Filter = "JPEG Filer (*.jpg)|*.jpg"; // EPUB Filer (*.epub)|*.epub|
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    System.Drawing.Image image = System.Drawing.Image.FromFile(openFileDialog.FileName);
+                    //image.Save(currentSelectedMango.ThumbnailPath, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    MangoThumbnail.Source = new BitmapImage(new Uri(openFileDialog.FileName));
+                    MangoThumbnail.UpdateLayout();
                 }
             }
         }
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Andre är tjock och fet

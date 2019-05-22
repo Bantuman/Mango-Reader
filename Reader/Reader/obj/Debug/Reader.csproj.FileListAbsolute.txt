@@ -43,3 +43,5 @@ C:\Users\Administratör.5CG62401YF\Documents\GitHub\Mango-Reader\Reader\Reader\b
 C:\Users\Administratör.5CG62401YF\Documents\GitHub\Mango-Reader\Reader\Reader\obj\Debug\Reader_Content.g.cs
 C:\Users\Administratör.5CG62401YF\Documents\GitHub\Mango-Reader\Reader\Reader\obj\Debug\Reader.csproj.CopyComplete
 C:\Users\Administratör.5CG62401YF\Documents\GitHub\Mango-Reader\Reader\Reader\bin\Debug\x86\pdfium.dll
+C:\Users\Administratör.5CG62401YF\Documents\GitHub\Mango-Reader\Reader\Reader\obj\Debug\ImportWindow.g.cs
+C:\Users\Administratör.5CG62401YF\Documents\GitHub\Mango-Reader\Reader\Reader\obj\Debug\ImportWindow.baml
