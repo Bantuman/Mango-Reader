@@ -21,99 +21,99 @@ namespace Reader
     /// </summary>
     public partial class ReaderWindow : Window
     {
-        private int currentPage;
-        private int amountOfPages;
-        private Mango currentManga;
-        private string currentChapter;
+        private int myCurrentPage;
+        private int myAmountOfPages;
+        private Mango myCurrentManga;
+        private string myCurrentChapter;
 
-        public ReaderWindow(Mango manga, string someChapter)
+        public ReaderWindow(Mango someManga, string someChapter)
         {
             InitializeComponent();
             PreviewKeyDown += Reader_KeyDown;
-            LoadManga(manga, someChapter);
+            LoadManga(someManga, someChapter);
             MovePage(1);
         }
 
         private void LoadManga(Mango someManga, string someChapter)
         {
-            currentPage = 0;
-            currentManga = someManga;
-            currentChapter = someChapter;
-            amountOfPages = PdfDocument.Load(someManga.GetChapter(someChapter).Path).PageCount;
+            myCurrentPage = 0;
+            myCurrentManga = someManga;
+            myCurrentChapter = someChapter;
+            myAmountOfPages = PdfDocument.Load(someManga.GetChapter(someChapter).AccessPath).PageCount;
         }
 
-        private void Reader_KeyDown(object sender, KeyEventArgs e)
+        private void Reader_KeyDown(object someSender, KeyEventArgs someKeyEventArg)
         {
-            if (e.Key == Key.Escape)
+            if (someKeyEventArg.Key == Key.Escape)
             {
                 Hide();
             }
-            if (e.Key == Key.Right)
+            if (someKeyEventArg.Key == Key.Right)
             {
                 MovePage(1);
             }
-            if (e.Key == Key.Left)
+            if (someKeyEventArg.Key == Key.Left)
             {
                 MovePage(-1);
             }
         }
 
-        private void MovePage(int increment)
+        private void MovePage(int anIncrement)
         {
-            currentPage = currentPage + increment;
-            if (currentPage > amountOfPages)
+            myCurrentPage = myCurrentPage + anIncrement;
+            if (myCurrentPage > myAmountOfPages)
             {
-                ChapterItem nextChapter = currentManga.GetChapter(currentChapter).NextChapter;
+                ChapterItem nextChapter = myCurrentManga.GetChapter(myCurrentChapter).AccessNextChapter;
                 if (nextChapter != null)
                 {
-                    currentChapter = nextChapter.Title;
+                    myCurrentChapter = nextChapter.AccessTitle;
                 }
-                currentPage = 0;
+                myCurrentPage = 0;
             }
-            if (currentPage < 0)
+            if (myCurrentPage < 0)
             {
-                ChapterItem previousChapter = currentManga.GetChapter(currentChapter).PreviousChapter;
-                if (previousChapter != null)
+                ChapterItem myPreviousChapter = myCurrentManga.GetChapter(myCurrentChapter).AccessPreviousChapter;
+                if (myPreviousChapter != null)
                 {
-                    currentChapter = previousChapter.Title;
-                    currentPage = PdfDocument.Load(previousChapter.Path).PageCount - 1;
+                    myCurrentChapter = myPreviousChapter.AccessTitle;
+                    myCurrentPage = PdfDocument.Load(myPreviousChapter.AccessPath).PageCount - 1;
                 }
                 else
                 {
-                    currentPage = 0;
+                    myCurrentPage = 0;
                 }
             }
 
-            Title = currentManga.Title + " : " + currentChapter;
+            Title = myCurrentManga.AccessTitle + " : " + myCurrentChapter;
             MangaTitle.Text = "     " + Title;
-            RenderPage(this, currentManga.GetChapter(currentChapter).Path, currentPage, new Size(1024, 1024));
+            RenderPage(this, myCurrentManga.GetChapter(myCurrentChapter).AccessPath, myCurrentPage, new Size(1024, 1024));
         }
 
-        private System.Drawing.Image GetPageImage(int pageNumber, Size size, PdfDocument document, int dpi)
+        private System.Drawing.Image GetPageImage(int aPageNumber, Size someSize, PdfDocument aDocument, int someDpi)
         {
-            return document.Render(pageNumber - 1, (int)size.Width, (int)size.Height, dpi, dpi, PdfRotation.Rotate0, PdfRenderFlags.Annotations);
+            return aDocument.Render(aPageNumber - 1, (int)someSize.Width, (int)someSize.Height, someDpi, someDpi, PdfRotation.Rotate0, PdfRenderFlags.Annotations);
         }
 
-        private void RenderPage(ReaderWindow reader, string pdfPath, int pageNumber, Size size)
+        private void RenderPage(ReaderWindow someReaderWindow, string somePdfPath, int aPageNumber, Size someSize)
         {
-            using (var document = PdfDocument.Load(pdfPath))
-            using (var image = GetPageImage(pageNumber, size, document, 150))
-            using (var ms = new MemoryStream())
+            using (var tempDocument = PdfDocument.Load(somePdfPath))
+            using (var tempImage = GetPageImage(aPageNumber, someSize, tempDocument, 150))
+            using (var tempMemoryStream = new MemoryStream())
             {
-                image.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
-                ms.Seek(0, SeekOrigin.Begin);
+                tempImage.Save(tempMemoryStream, System.Drawing.Imaging.ImageFormat.Bmp);
+                tempMemoryStream.Seek(0, SeekOrigin.Begin);
 
-                var bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.StreamSource = ms;
-                bitmapImage.EndInit();
+                var tempBitmapImage = new BitmapImage();
+                tempBitmapImage.BeginInit();
+                tempBitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                tempBitmapImage.StreamSource = tempMemoryStream;
+                tempBitmapImage.EndInit();
 
-                Width = bitmapImage.Width;
-                Height = bitmapImage.Height;
+                Width = tempBitmapImage.Width;
+                Height = tempBitmapImage.Height;
 
-                amountOfPages = document.PageCount;
-                reader.MangaDisplay.Source = bitmapImage;
+                myAmountOfPages = tempDocument.PageCount;
+                someReaderWindow.MangaDisplay.Source = tempBitmapImage;
             }
         }
 
