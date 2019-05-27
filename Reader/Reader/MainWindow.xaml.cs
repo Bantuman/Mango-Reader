@@ -110,6 +110,7 @@ namespace Reader
            
             System.Drawing.Image image = System.Drawing.Image.FromFile("C:/Users/Administratör.5CG62401YF/Documents/GitHub/Mango-Reader/Reader/Reader/res/missing.jpg"); //"pack://application:,,,/res/missing"
             image.Save(mangoPath + "\\thumbnail.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+            image.Dispose();
             StreamWriter writer = File.CreateText(mangoPath + "\\info.mango");
             writer.WriteLine("n:" + name + "\ns:" + synposis);
             writer.Close();
@@ -210,6 +211,7 @@ namespace Reader
                     MangoThumbnail.UpdateLayout();
                     ChapterList.ItemsSource = selectedMango.Chapters;
                     currentSelectedMango = selectedMango;
+                    MangoThumbnail.Tag = currentSelectedMango.ThumbnailPath;
                     MangoSynopsisBorder.Margin = new Thickness(MangoThumbnail.ActualWidth + 11, 0, 0, 0);
                 }
             }
@@ -289,10 +291,26 @@ namespace Reader
 
                 if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    System.Drawing.Image image = System.Drawing.Image.FromFile(openFileDialog.FileName);
-                    //image.Save(currentSelectedMango.ThumbnailPath, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    MangoThumbnail.Source = new BitmapImage(new Uri(openFileDialog.FileName));
-                    MangoThumbnail.UpdateLayout();
+                    if (MangoThumbnail.Tag.ToString() == currentSelectedMango.ThumbnailPath)
+                    {
+                        System.Drawing.Image image = System.Drawing.Image.FromFile(openFileDialog.FileName);
+                        File.Delete(currentSelectedMango.ThumbnailPath + "1");
+                        image.Save(currentSelectedMango.ThumbnailPath + "1", System.Drawing.Imaging.ImageFormat.Jpeg);
+                        image.Dispose();
+                        MangoThumbnail.Source = new BitmapImage(new Uri(currentSelectedMango.ThumbnailPath + "1"));
+                        MangoThumbnail.Tag = currentSelectedMango.ThumbnailPath + "1";
+                        MangoThumbnail.UpdateLayout();
+                    }
+                    else
+                    {
+                        System.Drawing.Image image = System.Drawing.Image.FromFile(openFileDialog.FileName);
+                        File.Delete(currentSelectedMango.ThumbnailPath);
+                        image.Save(currentSelectedMango.ThumbnailPath, System.Drawing.Imaging.ImageFormat.Jpeg);
+                        image.Dispose();
+                        MangoThumbnail.Source = new BitmapImage(new Uri(currentSelectedMango.ThumbnailPath));
+                        MangoThumbnail.Tag = currentSelectedMango.ThumbnailPath;
+                        MangoThumbnail.UpdateLayout();
+                    }
                 }
             }
         }
