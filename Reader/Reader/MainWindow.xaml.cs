@@ -18,7 +18,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.IO;
-
+using System.ComponentModel;
 
 namespace Reader
 {
@@ -168,7 +168,7 @@ namespace Reader
                 // Spara kapitel som ChapterItem och formattera namnet korrekt
                 string tempChapterName = tempChapterPaths[i].Remove(0, someMango.AccessChapterPath.Length + 1);
                 tempChapterName = tempChapterName.Remove(tempChapterName.Length - 4);
-                tempChapterItems.Add(new ChapterItem() {AccessPath = tempChapterPaths[i], AccessManga = someMango.AccessTitle, AccessTitle = tempChapterName, AccessCompletion = 0 });
+                tempChapterItems.Add(new ChapterItem() { AccessPath = tempChapterPaths[i], AccessManga = someMango.AccessTitle, AccessTitle = tempChapterName, AccessCompletion = 0 });
             }
 
             tempChapterItems.Sort((tempFirstObj, tempSecondObj) =>
@@ -198,6 +198,11 @@ namespace Reader
             myMangos.Add(someMango);
             MangaList.ItemsSource = tempCurrentItems;
             MangaList.Items.Refresh();
+        }
+
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            (sender as ProgressBar).Value = e.ProgressPercentage;
         }
 
         private Mango FindMango(string someMangoTitle)
@@ -271,12 +276,12 @@ namespace Reader
             string tempChapterTitle = tempChapterData[1];
             Mango tempManga = FindMango(tempMangaTitle);
 
-            ReaderWindow tempReader = new ReaderWindow(tempManga, tempChapterTitle);
+            ReaderWindow tempReader = new ReaderWindow(tempManga, tempChapterTitle, this);
             tempReader.Title = tempMangaTitle + " : " + tempChapterTitle;
             tempReader.Show();
         }
 
-        private void Window_Closed()
+        private void Window_Closed(object someSender, EventArgs someEventArg)
         {
             // Stäng ner alla gömda läsar fönster och import fönster
             Environment.Exit(0);
@@ -324,14 +329,14 @@ namespace Reader
             }
         }
 
-        private void MenuItem_Click()
+        private void MenuItem_Click(object someSender, RoutedEventArgs someEventArg)
         {
             ImportWindow tempWindow = new ImportWindow();
             tempWindow.Show();
             tempWindow.NextButton.Click += ImportManga_Click;
         }
 
-        private void MangoThumbnail_MouseLeftButtonUp()
+        private void MangoThumbnail_MouseLeftButtonUp(object someSender, MouseButtonEventArgs someEventArg)
         {
             MangoThumbnail.Source = null;
             MangoThumbnail.UpdateLayout();

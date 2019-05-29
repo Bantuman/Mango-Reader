@@ -1,6 +1,7 @@
 ﻿using PdfiumViewer;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,11 +24,13 @@ namespace Reader
     {
         private int myCurrentPage;
         private int myAmountOfPages;
+        private MainWindow myCurrentWindow;
         private Mango myCurrentManga;
         private string myCurrentChapter;
 
-        public ReaderWindow(Mango someManga, string someChapter)
+        public ReaderWindow(Mango someManga, string someChapter, MainWindow someWindow)
         {
+            myCurrentWindow = someWindow;
             InitializeComponent();
             PreviewKeyDown += Reader_KeyDown;
             LoadManga(someManga, someChapter);
@@ -41,6 +44,8 @@ namespace Reader
             myCurrentChapter = someChapter;
             myAmountOfPages = PdfDocument.Load(someManga.GetChapter(someChapter).AccessPath).PageCount;
         }
+
+       
 
         private void Reader_KeyDown(object someSender, KeyEventArgs someKeyEventArg)
         {
@@ -83,10 +88,14 @@ namespace Reader
                     myCurrentPage = 0;
                 }
             }
-
+            ChapterItem tempMyCurrentChapterItem = myCurrentManga.GetChapter(myCurrentChapter);
+            tempMyCurrentChapterItem.AccessCompletion = myCurrentPage;
+            tempMyCurrentChapterItem.AccessMaxCompletion = myAmountOfPages;
+            myCurrentWindow.ChapterList.ItemsSource = myCurrentManga.AccessChapters;
+            myCurrentWindow.ChapterList.UpdateLayout();
             Title = myCurrentManga.AccessTitle + " : " + myCurrentChapter;
             MangaTitle.Text = "     " + Title;
-            RenderPage(this, myCurrentManga.GetChapter(myCurrentChapter).AccessPath, myCurrentPage, new Size(1024, 1024));
+            RenderPage(this, tempMyCurrentChapterItem.AccessPath, myCurrentPage, new Size(1024, 1024));
         }
 
         private System.Drawing.Image GetPageImage(int aPageNumber, Size someSize, PdfDocument aDocument, int someDpi)

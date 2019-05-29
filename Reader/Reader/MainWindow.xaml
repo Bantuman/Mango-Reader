@@ -48,16 +48,16 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="100" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding Title}" />
+                            <TextBlock Text="{Binding AccessTitle}" />
                             <Image Margin="0,0,20,0" Height="16" HorizontalAlignment="Right" VerticalAlignment="Stretch" Source="/res/gradient.png" Stretch="UniformToFill"/>
-                            <ProgressBar Margin="-20,0,20,0" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Completion}" />
+                            <ProgressBar Margin="-20,0,20,0" Grid.Column="1" Minimum="0" Maximum="1000" Value="{Binding AccessCompletion}" />
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
 
             <Grid Grid.Column="1" Margin="0,10,10,10">
-                <Image x:Name="MangoThumbnail" VerticalAlignment="Top" HorizontalAlignment="Left" Height="300" Width="auto" MouseLeftButtonUp="MangoThumbnail_MouseLeftButtonUp">
+                <Image x:Name="MangoThumbnail" VerticalAlignment="Top" HorizontalAlignment="Left" Height="300" Width="auto" MouseLeftButtonUp="MangoThumbnail_MouseLeftButtonUp" >
                 </Image>
                 <Border Height="300" x:Name="MangoSynopsisBorder" Background="GhostWhite" BorderBrush="Silver" BorderThickness="1" CornerRadius="8,8,3,3" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,0,0,0">
                     <TextBlock x:Name="MangoSynopsisText" TextWrapping="Wrap" Text="sa" VerticalAlignment = "Top" HorizontalAlignment="Left" Width="Auto" Height="Auto" Margin="5,5,0,0"/>
@@ -75,7 +75,7 @@
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Tag="{Binding BindingData}"  Margin="-20, 2, -10, 2" Width="{Binding ActualWidth, 
+                                <Grid Tag="{Binding GetBindingData}"  Margin="-20, 2, -10, 2" Width="{Binding ActualWidth, 
               RelativeSource = {RelativeSource AncestorType = {x:Type ListView}}}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -85,14 +85,14 @@
                                         <ColumnDefinition Width="15" />
                                     </Grid.ColumnDefinitions>
                                     <Image Margin="0,0,0,0" Height="25" HorizontalAlignment="Left" VerticalAlignment="Stretch" Source="/res/chapterGradient.png" Stretch="Fill"/>
-                                    <TextBlock Name="MangaTitle" Margin="20,0" Text="{Binding Title}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                    <TextBlock Name="MangaTitle" Margin="20,0" Text="{Binding AccessTitle}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                     <Button Grid.Column="2" Click="Button_Click">
                                         <TextBlock Text="Read" />
                                     </Button>
                                     <Button Grid.Column="3" Background="#00DDDDDD" BorderThickness="0" Margin="5,0,-5,0">
                                         <Image Source="res/download.png"/>
                                     </Button>
-                                    <ProgressBar BorderThickness="1" BorderBrush="Gray" Margin="-64,0,5,0" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Completion}" />
+                                    <ProgressBar BorderThickness="1" BorderBrush="Gray" Margin="-64,0,5,0" Grid.Column="1" Minimum="0" Maximum="{Binding AccessMaxCompletion}" Value="{Binding AccessCompletion}" />
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
